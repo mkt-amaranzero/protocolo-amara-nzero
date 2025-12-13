@@ -425,7 +425,7 @@ const imprimirProtocolo = async () => {
  <img 
   src={LOGO_AMARA}
   alt="Amara nzero" 
-  className="h-32 object-contain -ml-2"
+  className="h-32 object-contain -ml-4"
 />
   <div className="text-center">
     <h2 className="text-2xl font-bold text-gray-900">
