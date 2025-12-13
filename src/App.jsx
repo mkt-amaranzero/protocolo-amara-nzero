@@ -422,11 +422,11 @@ const imprimirProtocolo = async () => {
               <div className="border-4 border-gray-800 p-8 space-y-6">
                 {/* Cabeçalho */}
                <div className="flex items-center justify-between border-b-2 border-gray-300 pb-4">
-  <img 
-    src={LOGO_AMARA}
-    alt="Amara nzero" 
-    className="h-32 object-contain"
-  />
+ <img 
+  src={LOGO_AMARA}
+  alt="Amara nzero" 
+  className="h-32 object-contain -ml-2"
+/>
   <div className="text-center">
     <h2 className="text-2xl font-bold text-gray-900">
       PROTOCOLO DE ENVIO DE DOCUMENTOS
