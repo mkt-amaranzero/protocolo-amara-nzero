@@ -6,8 +6,7 @@ const ProtocoloAmaraNzero = () => {
   const anoAtual = new Date().getFullYear();
 
   // Logo Amara NZero
-  const LOGO_AMARA =
-  "https://drive.google.com/uc?export=view&id=1PEiNReMZqR8n3U7hj-dP5DNFW6P93YPO";
+const LOGO_AMARA = "/logo-amara.png";
 
   const [formData, setFormData] = useState({
     setorEnvio: 'MARKETING',
