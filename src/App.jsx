@@ -402,7 +402,7 @@ const LOGO_AMARA = "https://i.imgur.com/BQEQiWL.png";
                     <img 
                       src={LOGO_AMARA}
                       alt="Amara nzero" 
-                      className="h-38 object-contain"
+                      className="h-34 object-contain"
                     />
                     <div>
                       <h2 className="text-2xl font-bold text-gray-900">
