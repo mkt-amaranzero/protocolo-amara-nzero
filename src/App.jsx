@@ -449,9 +449,9 @@ const LOGO_AMARA = "https://i.imgur.com/BQEQiWL.png";
                     <p className="text-sm text-gray-700 mb-3 font-medium">
                       Segue abaixo a relação dos documentos que estarão sendo enviados em anexo a este protocolo:
                     </p>
-                    <div className="bg-gray-50 p-4 rounded border border-gray-300">
-                      {documentos.filter(d => d.descricao).map((doc, index) => (
-                        <div key={doc.id} className="flex gap-3 text-sm mb-2">
+                   <div className="bg-gray-50 p-4 rounded border border-gray-300 grid grid-cols-2 gap-x-4">
+  {documentos.filter(d => d.descricao).map((doc, index) => (
+    <div key={doc.id} className="flex gap-3 text-sm mb-2">
                           <span className="font-bold" style={{color: '#00953b'}}>{index + 1}.</span>
                           <span className="font-medium">{doc.descricao}</span>
                         </div>
