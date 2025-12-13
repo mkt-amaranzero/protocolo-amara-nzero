@@ -113,20 +113,44 @@ const LOGO_AMARA = "https://i.imgur.com/BQEQiWL.png";
     setMostrarHistorico(false);
   };
 
-  const imprimirProtocolo = () => {
-    if (!formData.nomeArquivo.trim()) {
-      alert('❌ Por favor, preencha o nome do arquivo!');
-      return;
+const imprimirProtocolo = async () => {
+  if (!formData.nomeArquivo.trim()) {
+    alert('⚠ Por favor, preencha o nome do arquivo!');
+    return;
+  }
+  
+  await salvarNoHistorico();
+  setMostrarPreview(true);
+  
+  // Aguardar renderização
+  setTimeout(async () => {
+    const elemento = document.getElementById('protocolo-print');
+    
+    try {
+      const canvas = await html2canvas(elemento, {
+        scale: 2,
+        useCORS: true,
+        logging: false
+      });
+      
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new window.jspdf.jsPDF('p', 'mm', 'a4');
+      
+      const imgWidth = 210;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      
+      const nomeArquivo = `PROTOCOLO - ${formData.setorEnvio} - ${formData.nomeArquivo}.pdf`;
+      pdf.save(nomeArquivo);
+      
+      alert('✅ PDF salvo com sucesso!');
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+      alert('❌ Erro ao gerar PDF. Tente novamente.');
     }
-    
-    salvarNoHistorico();
-    setMostrarPreview(true);
-    
-    // Aguardar um momento para o preview renderizar
-    setTimeout(() => {
-      window.print();
-    }, 500);
-  };
+  }, 500);
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 p-6">
