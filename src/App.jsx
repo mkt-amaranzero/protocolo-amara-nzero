@@ -434,10 +434,10 @@ const imprimirProtocolo = async () => {
                       </h2>
                     </div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-lg font-bold border-2 border-gray-800 px-3 py-1 mb-1">
-                      Protocolo {anoAtual}
-                    </div>
+                 <div className="text-center flex flex-col items-center justify-center">
+  <div className="text-lg font-bold border-2 border-gray-800 px-4 py-2 mb-1 flex items-center justify-center min-w-32">
+    Protocolo {anoAtual}
+  </div>
                     <div className="text-sm font-medium text-gray-700">
                       DESCRIÇÃO-MKT
                     </div>
@@ -446,28 +446,28 @@ const imprimirProtocolo = async () => {
 
                 {/* Conteúdo */}
                 <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600">Setor de Envio:</p>
-                      <p className="font-bold text-lg">{formData.setorEnvio}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600">Unidade de Envio:</p>
-                      <p className="font-bold text-lg">{formData.unidadeEnvio}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600">Unidade de Destino:</p>
-                      <p className="font-bold text-lg">{formData.unidadeDestino || '-'}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-600">Setor de Destino:</p>
-                      <p className="font-bold text-lg">{formData.setorDestino || '-'}</p>
-                    </div>
-                    <div className="col-span-2">
-                      <p className="text-sm font-semibold text-gray-600">Aos Cuidados de:</p>
-                      <p className="font-bold text-lg">{formData.aosCuidadosDe || '-'}</p>
-                    </div>
-                  </div>
+                <div className="grid grid-cols-2 gap-4">
+  <div>
+    <p className="font-semibold text-gray-600" style={{fontSize: '14px'}}>Setor de Envio:</p>
+    <p className="font-bold" style={{fontSize: '13px'}}>{formData.setorEnvio}</p>
+  </div>
+  <div>
+    <p className="font-semibold text-gray-600" style={{fontSize: '14px'}}>Unidade de Envio:</p>
+    <p className="font-bold" style={{fontSize: '13px'}}>{formData.unidadeEnvio}</p>
+  </div>
+  <div>
+    <p className="font-semibold text-gray-600" style={{fontSize: '14px'}}>Unidade de Destino:</p>
+    <p className="font-bold" style={{fontSize: '13px'}}>{formData.unidadeDestino || '-'}</p>
+  </div>
+  <div>
+    <p className="font-semibold text-gray-600" style={{fontSize: '14px'}}>Setor de Destino:</p>
+    <p className="font-bold" style={{fontSize: '13px'}}>{formData.setorDestino || '-'}</p>
+  </div>
+  <div className="col-span-2">
+    <p className="font-semibold text-gray-600" style={{fontSize: '14px'}}>Aos Cuidados de:</p>
+    <p className="font-bold" style={{fontSize: '13px'}}>{formData.aosCuidadosDe || '-'}</p>
+  </div>
+</div>
 
                   <div className="border-t-2 border-gray-300 pt-4 mt-4">
                     <p className="text-sm text-gray-700 mb-3 font-medium">
@@ -483,11 +483,11 @@ const imprimirProtocolo = async () => {
                     </div>
                   </div>
 
-                  <div className="bg-yellow-100 border-2 border-yellow-500 p-4 rounded mt-4">
-                    <p className="font-bold text-center text-base">
-                      DEVOLVER ESTE PROTOCOLO DEVIDAMENTE ASSINADO
-                    </p>
-                  </div>
+                  <div className="bg-yellow-100 border-2 border-yellow-500 p-4 rounded mt-4 flex items-center justify-center min-h-16">
+  <p className="font-bold text-center text-base">
+    DEVOLVER ESTE PROTOCOLO DEVIDAMENTE ASSINADO
+  </p>
+</div>
 
                   <div className="border-t-2 border-gray-300 pt-4 mt-4">
                     <div className="grid grid-cols-3 gap-4 text-sm">
@@ -495,14 +495,14 @@ const imprimirProtocolo = async () => {
                         <p className="text-gray-700 font-semibold mb-1">DATA DE ENVIO</p>
                         <p className="font-bold text-lg">{hoje}</p>
                       </div>
-                      <div className="text-center">
-                        <p className="text-gray-700 font-semibold mb-1">DATA RECEBIMENTO</p>
-                        <p className="text-gray-500">___/___/___</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-gray-700 font-semibold mb-1">HORÁRIO</p>
-                        <p className="text-gray-500">___:___ hs</p>
-                      </div>
+                     <div className="text-center">
+  <p className="text-gray-700 font-semibold mb-1">DATA RECEBIMENTO</p>
+  <p className="text-gray-500 tracking-widest">_____/_____/_____</p>
+</div>
+<div className="text-center">
+  <p className="text-gray-700 font-semibold mb-1">HORÁRIO</p>
+  <p className="text-gray-500 tracking-widest">_____:_____ hs</p>
+</div>
                     </div>
                   </div>
 
