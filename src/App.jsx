@@ -421,24 +421,22 @@ const imprimirProtocolo = async () => {
             <div id="protocolo-print" className="bg-white rounded-lg shadow-lg p-8">
               <div className="border-4 border-gray-800 p-8 space-y-6">
                 {/* Cabeçalho */}
-             <div className="grid grid-cols-3 items-center border-b-2 border-gray-300 pb-4">
-  <div className="flex justify-start">
-    <img 
-      src={LOGO_AMARA}
-      alt="Amara nzero" 
-      className="h-36 object-contain -ml-4"
-    />
-  </div>
-  <div className="text-center">
+            <div className="flex items-center justify-between border-b-2 border-gray-300 pb-4">
+  <img 
+    src={LOGO_AMARA}
+    alt="Amara nzero" 
+    className="h-36 object-contain -ml-4"
+  />
+  <div className="text-center flex-1">
     <h2 className="text-2xl font-bold text-gray-900">
       PROTOCOLO DE ENVIO DE DOCUMENTOS
     </h2>
   </div>
-  <div className="flex flex-col items-end">
-    <div className="text-lg font-bold border-2 border-gray-800 px-4 py-2 mb-1 min-w-32 flex items-center justify-center">
-      Protocolo {anoAtual}
+  <div className="flex flex-col items-center">
+    <div className="text-base font-bold border-2 border-gray-800 px-3 py-1 mb-1">
+      PROTOCOLO 2025
     </div>
-    <div className="text-sm font-medium text-gray-700">
+    <div className="text-xs font-medium text-gray-700">
       DESCRIÇÃO-MKT
     </div>
   </div>
