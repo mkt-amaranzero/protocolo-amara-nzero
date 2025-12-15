@@ -345,7 +345,7 @@ const ProtocoloAmaraNZero = () => {
                     name="unidadeDestino"
                     value={formData.unidadeDestino}
                     onChange={handleInputChange}
-                    placeholder="Ex: FILIAL SP"
+                    placeholder="Ex: Filial SP"
                     className="w-full px-3 py-2 border rounded-md"
                   />
                 </div>
@@ -358,7 +358,7 @@ const ProtocoloAmaraNZero = () => {
                     name="setorDestino"
                     value={formData.setorDestino}
                     onChange={handleInputChange}
-                    placeholder="Ex: FINANCEIRO"
+                    placeholder="Ex: Financeiro"
                     className="w-full px-3 py-2 border rounded-md"
                   />
                 </div>
