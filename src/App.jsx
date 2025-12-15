@@ -432,14 +432,34 @@ const imprimirProtocolo = async () => {
       PROTOCOLO DE ENVIO DE DOCUMENTOS
     </h2>
   </div>
-  <div className="flex flex-col items-center">
-    <div className="text-base font-bold border-2 border-gray-800 px-3 py-1 mb-1">
-      PROTOCOLO 2025
-    </div>
-    <div className="text-xs font-medium text-gray-700">
-      DESCRIÇÃO-MKT
-    </div>
+ <div className="flex flex-col items-center">
+  <div
+    style={{
+      width: '140px',
+      height: '32px',
+      border: '2px solid #1f2937',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: '14px',
+      fontWeight: '700',
+      boxSizing: 'border-box'
+    }}
+  >
+    PROTOCOLO 2025
   </div>
+
+  <div
+    style={{
+      fontSize: '12px',
+      fontWeight: '500',
+      color: '#374151',
+      marginTop: '4px'
+    }}
+  >
+    DESCRIÇÃO-MKT
+  </div>
+</div>
 </div>
 
                 {/* Conteúdo */}
