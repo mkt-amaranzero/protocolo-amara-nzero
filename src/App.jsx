@@ -436,7 +436,7 @@ const imprimirProtocolo = async () => {
   <div
     style={{
       width: '140px',
-      height: '40px',
+      height: '70px',
       border: '2px solid #1f2937',
       display: 'flex',
       alignItems: 'center',
