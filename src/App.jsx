@@ -112,7 +112,7 @@ const ProtocoloAmaraNZero = () => {
     try {
       await window.storage.set(`protocolo:${protocolo.id}`, JSON.stringify(protocolo));
       await carregarHistorico();
-      alert('✅ Protocolo salvo no histórico!');
+      alert('Protocolo salvo no histórico!');
     } catch (error) {
       console.error('Erro ao salvar:', error);
     }
@@ -282,7 +282,7 @@ const ProtocoloAmaraNZero = () => {
             {/* Nome do Arquivo */}
             <div className="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4">
               <label className="block text-sm font-bold text-gray-800 mb-2">
-                📝 Nome do Arquivo (obrigatório) *
+                Nome do Arquivo (obrigatório) *
               </label>
               <input
                 type="text"
@@ -300,7 +300,7 @@ const ProtocoloAmaraNZero = () => {
             {/* Dados de Envio */}
             <div>
               <h2 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
-                📤 Dados de Envio
+                Dados de Envio
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -333,7 +333,7 @@ const ProtocoloAmaraNZero = () => {
             {/* Dados de Destino */}
             <div>
               <h2 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
-                📥 Dados de Destino
+                Dados de Destino
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
