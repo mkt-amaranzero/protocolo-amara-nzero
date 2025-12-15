@@ -382,7 +382,7 @@ const ProtocoloAmaraNZero = () => {
             <div>
               <div className="flex justify-between items-center mb-4 border-b pb-2">
                 <h2 className="text-xl font-semibold text-gray-800">
-                  📄 Documentos
+                  Documentos
                 </h2>
                 <button
                   onClick={adicionarDoc}
