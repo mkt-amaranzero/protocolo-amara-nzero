@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { FileText, Plus, Trash2, Eye, CheckCircle, History, Download } from 'lucide-react';
 
-const ProtocoloAmaraNzero = () => {
+const ProtocoloAmaraNZero = () => {
   const hoje = new Date().toLocaleDateString('pt-BR');
   const anoAtual = new Date().getFullYear();
 
-  // Logo Amara NZero
-const LOGO_AMARA = "https://i.imgur.com/BQEQiWL.png";
+  // Logo Amara NZero (URL externa)
+  const LOGO_AMARA = "https://i.imgur.com/BQEQiWL.png";
   
   const [formData, setFormData] = useState({
     setorEnvio: 'MARKETING',
@@ -27,11 +27,37 @@ const LOGO_AMARA = "https://i.imgur.com/BQEQiWL.png";
   const [mostrarPreview, setMostrarPreview] = useState(false);
   const [mostrarHistorico, setMostrarHistorico] = useState(false);
   const [historico, setHistorico] = useState([]);
+  const [numeroProtocolo, setNumeroProtocolo] = useState(null);
 
   // Carregar histórico
   useEffect(() => {
     carregarHistorico();
+    gerarNumeroProtocolo();
   }, []);
+
+  const gerarNumeroProtocolo = async () => {
+    try {
+      // Buscar o último número usado PARA ESTE ANO
+      const chaveAno = `ultimo_numero_protocolo_${anoAtual}`;
+      const result = await window.storage.get(chaveAno);
+      let proximoNumero = 1;
+      
+      if (result && result.value) {
+        proximoNumero = parseInt(result.value) + 1;
+      }
+      
+      // Formatar: ANO-NÚMERO com 3 dígitos (ex: 2025-001)
+      const numeroFormatado = `${anoAtual}-${proximoNumero.toString().padStart(3, '0')}`;
+      setNumeroProtocolo(numeroFormatado);
+      
+      // Salvar o próximo número PARA ESTE ANO
+      await window.storage.set(chaveAno, proximoNumero.toString());
+    } catch (error) {
+      // Se der erro, usar timestamp como fallback
+      const numeroFallback = `${anoAtual}-${Date.now().toString().slice(-3)}`;
+      setNumeroProtocolo(numeroFallback);
+    }
+  };
 
   const carregarHistorico = async () => {
     try {
@@ -75,6 +101,7 @@ const LOGO_AMARA = "https://i.imgur.com/BQEQiWL.png";
   const salvarNoHistorico = async () => {
     const protocolo = {
       id: Date.now(),
+      numeroProtocolo: numeroProtocolo,
       dataGeracao: new Date().toISOString(),
       dataFormatada: hoje,
       nomeArquivo: formData.nomeArquivo || 'Sem nome',
@@ -113,49 +140,33 @@ const LOGO_AMARA = "https://i.imgur.com/BQEQiWL.png";
     setMostrarHistorico(false);
   };
 
-const imprimirProtocolo = async () => {
-  if (!formData.nomeArquivo.trim()) {
-    alert('⚠ Por favor, preencha o nome do arquivo!');
-    return;
-  }
-  
-  await salvarNoHistorico();
-  setMostrarPreview(true);
-  
-  // Aguardar renderização
-  setTimeout(async () => {
-    const elemento = document.getElementById('protocolo-print');
-    
-    try {
-      const canvas = await html2canvas(elemento, {
-        scale: 2,
-        useCORS: true,
-        logging: false
-      });
-      
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new window.jspdf.jsPDF('p', 'mm', 'a4');
-      
-      const imgWidth = 210;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-      
-      const nomeArquivo = `PROTOCOLO - ${formData.setorEnvio} - ${formData.nomeArquivo}.pdf`;
-      pdf.save(nomeArquivo);
-      
-      alert('✅ PDF salvo com sucesso!');
-    } catch (error) {
-      console.error('Erro ao gerar PDF:', error);
-      alert('❌ Erro ao gerar PDF. Tente novamente.');
+  const imprimirProtocolo = async () => {
+    if (!formData.nomeArquivo.trim()) {
+      alert('❌ Por favor, preencha o nome do arquivo!');
+      return;
     }
-  }, 500);
-};
+    
+    await salvarNoHistorico();
+    setMostrarPreview(true);
+    
+    // Aguardar um momento para o preview renderizar
+    setTimeout(() => {
+      window.print();
+      // Gerar novo número para o próximo protocolo
+      gerarNumeroProtocolo();
+    }, 500);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 p-6">
       <style>{`
         @media print {
+          /* Forçar impressão de cores */
+          * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          
           body * {
             visibility: hidden;
           }
@@ -167,9 +178,16 @@ const imprimirProtocolo = async () => {
             left: 0;
             top: 0;
             width: 100%;
+            padding: 10mm;
           }
           .no-print {
             display: none !important;
+          }
+          
+          /* Configurar página A4 */
+          @page {
+            size: A4;
+            margin: 10mm;
           }
         }
       `}</style>
@@ -198,7 +216,7 @@ const imprimirProtocolo = async () => {
           </div>
           <div className="mt-3 flex items-center gap-2 text-sm p-2 rounded" style={{backgroundColor: '#e6f7ed', color: '#00953b'}}>
             <CheckCircle className="w-4 h-4" />
-            <span>Data: <strong>{hoje}</strong> | Protocolo <strong>{anoAtual}</strong></span>
+            <span>Data: <strong>{hoje}</strong> | Protocolo <strong>{anoAtual}</strong> | Nº <strong>{numeroProtocolo || 'Gerando...'}</strong></span>
           </div>
         </div>
 
@@ -222,7 +240,12 @@ const imprimirProtocolo = async () => {
                   <div key={p.id} className="border rounded-lg p-4 hover:bg-gray-50">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <h3 className="font-semibold text-lg">{p.nomeArquivo}</h3>
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-semibold text-lg">{p.nomeArquivo}</h3>
+                          <span className="text-xs font-mono bg-green-100 text-green-800 px-2 py-1 rounded">
+                            #{p.numeroProtocolo}
+                          </span>
+                        </div>
                         <p className="text-sm text-gray-600">
                           {p.setorEnvio} → {p.unidadeDestino || 'N/A'}
                         </p>
@@ -411,25 +434,25 @@ const imprimirProtocolo = async () => {
                 className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
               >
                 <Download className="w-5 h-5" />
-                Salvar como PDF (Imprimir)
+                Salvar como PDF
               </button>
             </div>
           </div>
         ) : (
           /* Preview */
           <div>
-            <div id="protocolo-print" className="bg-white rounded-lg shadow-lg p-8">
-              <div className="border-4 border-gray-800 p-8 space-y-6">
-                {/* Cabeçalho */}
-            <div className="flex items-center justify-between border-b-2 border-gray-300 pb-4">
-  <img 
-    src={LOGO_AMARA}
-    alt="Amara nzero" 
-    className="h-36 object-contain -ml-4"
-  />
-  <div className="text-center flex-1">
-    <h2 className="text-2xl font-bold text-gray-900">
-      PROTOCOLO DE ENVIO DE DOCUMENTOS
+            <div id="protocolo-print" className="bg-white p-6">
+              <div className="border-4 border-black p-6">
+                {/* Cabeçalho CORRIGIDO */}
+                <div className="flex items-start justify-between border-b-2 border-gray-400 pb-4 mb-4">
+                  <img 
+                    src={LOGO_AMARA}
+                    alt="Amara NZero" 
+                    className="h-20 object-contain"
+                  />
+                  <div className="flex-1 text-center px-4">
+                    <h2 className="text-xl font-bold text-gray-900">
+                      PROTOCOLO DE ENVIO DE DOCUMENTOS
     </h2>
   </div>
  <div className="flex flex-col items-center">
@@ -460,83 +483,87 @@ const imprimirProtocolo = async () => {
     DESCRIÇÃO-MKT
   </div>
 </div>
-</div>
+ </div>
 
-                {/* Conteúdo */}
-                <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-  <div>
-    <p className="font-semibold text-gray-600" style={{fontSize: '14px'}}>Setor de Envio:</p>
-    <p className="font-bold" style={{fontSize: '13px'}}>{formData.setorEnvio}</p>
-  </div>
-  <div>
-    <p className="font-semibold text-gray-600" style={{fontSize: '14px'}}>Unidade de Envio:</p>
-    <p className="font-bold" style={{fontSize: '13px'}}>{formData.unidadeEnvio}</p>
-  </div>
-  <div>
-    <p className="font-semibold text-gray-600" style={{fontSize: '14px'}}>Unidade de Destino:</p>
-    <p className="font-bold" style={{fontSize: '13px'}}>{formData.unidadeDestino || '-'}</p>
-  </div>
-  <div>
-    <p className="font-semibold text-gray-600" style={{fontSize: '14px'}}>Setor de Destino:</p>
-    <p className="font-bold" style={{fontSize: '13px'}}>{formData.setorDestino || '-'}</p>
-  </div>
-  <div className="col-span-2">
-    <p className="font-semibold text-gray-600" style={{fontSize: '14px'}}>Aos Cuidados de:</p>
-    <p className="font-bold" style={{fontSize: '13px'}}>{formData.aosCuidadosDe || '-'}</p>
-  </div>
-</div>
+                {/* Dados em Grid */}
+                <div className="grid grid-cols-2 gap-x-8 gap-y-3 mb-4 text-sm">
+                  <div>
+                    <p className="text-gray-600 font-semibold">Setor de Envio:</p>
+                    <p className="font-bold">{formData.setorEnvio}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600 font-semibold">Unidade de Envio:</p>
+                    <p className="font-bold">{formData.unidadeEnvio}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600 font-semibold">Unidade de Destino:</p>
+                    <p className="font-bold">{formData.unidadeDestino || '-'}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600 font-semibold">Setor de Destino:</p>
+                    <p className="font-bold">{formData.setorDestino || '-'}</p>
+                  </div>
+                  <div className="col-span-2">
+                    <p className="text-gray-600 font-semibold">Aos Cuidados de:</p>
+                    <p className="font-bold">{formData.aosCuidadosDe || '-'}</p>
+                  </div>
+                </div>
 
-                  <div className="border-t-2 border-gray-300 pt-4 mt-4">
-                    <p className="text-sm text-gray-700 mb-3 font-medium">
-                      Segue abaixo a relação dos documentos que estarão sendo enviados em anexo a este protocolo:
-                    </p>
-                   <div className="bg-gray-50 p-4 rounded border border-gray-300 grid grid-cols-2 gap-x-4">
-  {documentos.filter(d => d.descricao).map((doc, index) => (
-    <div key={doc.id} className="flex gap-3 text-sm mb-2">
+                {/* Documentos */}
+                <div className="border-t-2 border-gray-400 pt-4 mb-4">
+                  <p className="text-sm mb-3">
+                    Segue abaixo a relação dos documentos que estarão sendo enviados em anexo a este protocolo:
+                  </p>
+                  <div className="bg-gray-100 p-3 border border-gray-300 rounded">
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                      {documentos.filter(d => d.descricao).map((doc, index) => (
+                        <div key={doc.id} className="flex gap-2 text-sm">
                           <span className="font-bold" style={{color: '#00953b'}}>{index + 1}.</span>
-                          <span className="font-medium">{doc.descricao}</span>
+                          <span>{doc.descricao}</span>
                         </div>
                       ))}
                     </div>
                   </div>
+                </div>
 
-                  <div className="bg-yellow-100 border-2 border-yellow-500 p-4 rounded mt-4 flex items-center justify-center min-h-16">
-  <p className="font-bold text-center text-base">
-    DEVOLVER ESTE PROTOCOLO DEVIDAMENTE ASSINADO
-  </p>
-</div>
+                {/* Aviso Amarelo */}
+                <div className="bg-yellow-100 border-2 border-yellow-500 p-3 my-4">
+                  <p className="font-bold text-center text-sm">
+                    DEVOLVER ESTE PROTOCOLO DEVIDAMENTE ASSINADO
+                  </p>
+                </div>
 
-                  <div className="border-t-2 border-gray-300 pt-4 mt-4">
-                    <div className="grid grid-cols-3 gap-4 text-sm">
-                      <div className="text-center">
-                        <p className="text-gray-700 font-semibold mb-1">DATA DE ENVIO</p>
-                        <p className="font-bold text-lg">{hoje}</p>
-                      </div>
-                     <div className="text-center">
-  <p className="text-gray-700 font-semibold mb-1">DATA RECEBIMENTO</p>
-  <p className="text-gray-500 tracking-widest">_____/_____/_____</p>
-</div>
-<div className="text-center">
-  <p className="text-gray-700 font-semibold mb-1">HORÁRIO</p>
-  <p className="text-gray-500 tracking-widest">_____:_____ hs</p>
-</div>
+                {/* Datas */}
+                <div className="border-t-2 border-gray-400 pt-4 mb-4">
+                  <div className="grid grid-cols-3 gap-4 text-center text-sm">
+                    <div>
+                      <p className="font-semibold mb-1">DATA DE ENVIO</p>
+                      <p className="font-bold">{hoje}</p>
+                    </div>
+                    <div>
+                      <p className="font-semibold mb-1">DATA RECEBIMENTO</p>
+                      <p>_____/_____/_____</p>
+                    </div>
+                    <div>
+                      <p className="font-semibold mb-1">HORÁRIO</p>
+                      <p>_____:_____ hs</p>
                     </div>
                   </div>
+                </div>
 
-                  <div className="border-t-2 border-gray-300 pt-6 mt-6">
-                    <div className="grid grid-cols-2 gap-8">
-                      <div className="text-center">
-                        <div className="h-16"></div>
-                        <div className="border-t-2 border-gray-700 pt-2">
-                          <p className="text-xs font-medium">Assinatura do Emitente</p>
-                        </div>
+                {/* Assinaturas */}
+                <div className="border-t-2 border-gray-400 pt-6">
+                  <div className="grid grid-cols-2 gap-12">
+                    <div className="text-center">
+                      <div className="h-12 mb-2"></div>
+                      <div className="border-t-2 border-black pt-2">
+                        <p className="text-xs font-medium">Assinatura do Emitente</p>
                       </div>
-                      <div className="text-center">
-                        <div className="h-16"></div>
-                        <div className="border-t-2 border-gray-700 pt-2">
-                          <p className="text-xs font-medium">Assinatura do Receptor</p>
-                        </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="h-12 mb-2"></div>
+                      <div className="border-t-2 border-black pt-2">
+                        <p className="text-xs font-medium">Assinatura do Receptor</p>
                       </div>
                     </div>
                   </div>
@@ -557,26 +584,14 @@ const imprimirProtocolo = async () => {
                 className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
               >
                 <Download className="w-5 h-5" />
-                Salvar como PDF
+                Gerar PDF
               </button>
             </div>
           </div>
         )}
-
-        {/* Instruções */}
-        <div className="mt-6 rounded-lg p-4 text-sm no-print" style={{backgroundColor: '#e6f7ed', borderColor: '#00953b', borderWidth: '1px', color: '#00953b'}}>
-          <p className="font-bold mb-2">💡 Como usar:</p>
-          <ol className="list-decimal list-inside space-y-1">
-            <li>Preencha o <strong>nome do arquivo</strong></li>
-            <li>Complete os dados de envio e destino</li>
-            <li>Adicione os documentos</li>
-            <li>Clique em <strong>"Salvar como PDF"</strong></li>
-            <li>Na janela de impressão, escolha <strong>"Salvar como PDF"</strong></li>
-          </ol>
-        </div>
       </div>
     </div>
   );
 };
 
-export default ProtocoloAmaraNzero;
+export default ProtocoloAmaraNZero;
