@@ -465,7 +465,7 @@ const ProtocoloAmaraNZero = () => {
               <ol className="list-decimal list-inside space-y-1">
                 <li><strong>"Visualizar Protocolo"</strong> - Ver como ficará antes de salvar</li>
                 <li><strong>"Salvar no Histórico"</strong> - Apenas salva localmente (sem imprimir)</li>
-                <li><strong>"Salvar como PDF"</strong> - Salva no histórico E já abre para impressão</li>
+                <li><strong>"Salvar como PDF"</strong> - Salva no histórico e já abre para impressão</li>
               </ol>
               <p className="mt-3 text-xs bg-yellow-50 border border-yellow-300 rounded p-2" style={{color: '#92400e'}}>
                 <strong>Importante:</strong> Os dados ficam salvos apenas neste navegador. Se limpar o cache ou usar outro computador, não verá o histórico.
