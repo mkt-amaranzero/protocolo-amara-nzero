@@ -448,7 +448,7 @@ const ProtocoloAmaraNZero = () => {
   <img 
     src={LOGO_AMARA}
     alt="Amara NZero" 
-    className="h-20 object-contain"
+    className="h-24 object-contain"
   />
   <div className="flex-1 text-center px-4">
     <h2 className="text-xl font-bold text-gray-900">
