@@ -415,25 +415,35 @@ const carregarHistorico = () => {
               </div>
             </div>
 
-            {/* Botões */}
-            <div className="space-y-3 pt-4">
-              <button
-                onClick={() => setMostrarPreview(true)}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 text-white rounded-lg hover:opacity-90 font-medium"
-                style={{backgroundColor: '#00953b'}}
-              >
-                <Eye className="w-5 h-5" />
-                Visualizar Protocolo
-              </button>
-              <button
-                onClick={imprimirProtocolo}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
-              >
-                <Download className="w-5 h-5" />
-                Salvar como PDF
-              </button>
-            </div>
-          </div>
+{/* Botões */}
+<div className="space-y-3 pt-4">
+  <button
+    onClick={() => setMostrarPreview(true)}
+    className="w-full flex items-center justify-center gap-2 px-6 py-3 text-white rounded-lg hover:opacity-90 font-medium"
+    style={{backgroundColor: '#00953b'}}
+  >
+    <Eye className="w-5 h-5" />
+    Visualizar Protocolo
+  </button>
+  
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <button
+      onClick={salvarSemImprimir}
+      className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+    >
+      <History className="w-5 h-5" />
+      Salvar no Histórico
+    </button>
+    
+    <button
+      onClick={imprimirProtocolo}
+      className="flex items-center justify-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
+    >
+      <Download className="w-5 h-5" />
+      Salvar como PDF
+    </button>
+  </div>
+</div>
         ) : (
           /* Preview */
           <div>
