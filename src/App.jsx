@@ -446,10 +446,10 @@ const ProtocoloAmaraNZero = () => {
                 {/* Cabeçalho CORRIGIDO */}
                <div className="flex items-center justify-between border-b-2 border-gray-400 pb-4 mb-4">
   <img 
-    src={LOGO_AMARA}
-    alt="Amara NZero" 
-    className="h-24 object-contain"
-  />
+  src={LOGO_AMARA}
+  alt="Amara NZero" 
+  className="h-28 object-contain -ml-6"
+/>
   <div className="flex-1 text-center px-4">
     <h2 className="text-xl font-bold text-gray-900">
       PROTOCOLO DE ENVIO DE DOCUMENTOS
