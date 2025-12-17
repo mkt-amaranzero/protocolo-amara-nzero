@@ -168,7 +168,164 @@ const ProtocoloAmaraNZero = () => {
       gerarNumeroProtocolo();
     }, 500);
   };
+const [protocolosSelecionados, setProtocolosSelecionados] = useState([]);
+const [modoSelecao, setModoSelecao] = useState(false);
 
+const toggleSelecao = (id) => {
+  if (protocolosSelecionados.includes(id)) {
+    setProtocolosSelecionados(protocolosSelecionados.filter(pId => pId !== id));
+  } else {
+    setProtocolosSelecionados([...protocolosSelecionados, id]);
+  }
+};
+
+const selecionarTodos = () => {
+  if (protocolosSelecionados.length === historico.length) {
+    setProtocolosSelecionados([]);
+  } else {
+    setProtocolosSelecionados(historico.map(p => p.id));
+  }
+};
+
+const imprimirSelecionados = () => {
+  if (protocolosSelecionados.length === 0) {
+    alert('⚠️ Selecione pelo menos um protocolo!');
+    return;
+  }
+
+  const protocolos = historico.filter(p => protocolosSelecionados.includes(p.id));
+  
+  // Criar conteúdo HTML com todos os protocolos
+  let conteudoHTML = '';
+  
+  protocolos.forEach((protocolo, index) => {
+    const docs = protocolo.documentos || [];
+    const docsHTML = docs.map((doc, idx) => `
+      <div style="display: flex; gap: 8px; font-size: 14px;">
+        <span style="font-weight: bold; color: #00953b;">${idx + 1}.</span>
+        <span>${doc}</span>
+      </div>
+    `).join('');
+
+    conteudoHTML += `
+      ${index > 0 ? '<div style="page-break-before: always;"></div>' : ''}
+      <div style="border: 4px solid black; padding: 24px; margin-bottom: 20px; font-family: 'Lato', sans-serif;">
+        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #9ca3af; padding-bottom: 16px; margin-bottom: 16px;">
+          <img src="${LOGO_AMARA}" style="height: 112px; object-fit: contain; margin-left: -24px;" />
+          <div style="flex: 1; text-align: center; padding: 0 16px;">
+            <h2 style="font-size: 20px; font-weight: bold; margin: 0;">PROTOCOLO DE ENVIO DE DOCUMENTOS</h2>
+          </div>
+          <div style="text-align: center;">
+            <div style="width: 140px; height: 32px; border: 2px solid #1f2937; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700;">
+              PROTOCOLO 2025
+            </div>
+            <div style="font-size: 12px; font-weight: 500; color: #374151; margin-top: 4px;">DESCRIÇÃO-MKT</div>
+          </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px 32px; margin-bottom: 16px; font-size: 14px;">
+          <div>
+            <p style="color: #4b5563; font-weight: 600; margin: 0 0 4px 0; font-size: 14px;">Setor de Envio:</p>
+            <p style="font-weight: bold; margin: 0; font-size: 13px;">${protocolo.setorEnvio}</p>
+          </div>
+          <div>
+            <p style="color: #4b5563; font-weight: 600; margin: 0 0 4px 0; font-size: 14px;">Unidade de Envio:</p>
+            <p style="font-weight: bold; margin: 0; font-size: 13px;">${protocolo.unidadeEnvio}</p>
+          </div>
+          <div>
+            <p style="color: #4b5563; font-weight: 600; margin: 0 0 4px 0; font-size: 14px;">Unidade de Destino:</p>
+            <p style="font-weight: bold; margin: 0; font-size: 13px;">${protocolo.unidadeDestino || '-'}</p>
+          </div>
+          <div>
+            <p style="color: #4b5563; font-weight: 600; margin: 0 0 4px 0; font-size: 14px;">Setor de Destino:</p>
+            <p style="font-weight: bold; margin: 0; font-size: 13px;">${protocolo.setorDestino || '-'}</p>
+          </div>
+          <div style="grid-column: span 2;">
+            <p style="color: #4b5563; font-weight: 600; margin: 0 0 4px 0; font-size: 14px;">Aos Cuidados de:</p>
+            <p style="font-weight: bold; margin: 0; font-size: 13px;">${protocolo.aosCuidadosDe || '-'}</p>
+          </div>
+        </div>
+        
+        <div style="border-top: 2px solid #9ca3af; padding-top: 16px; margin-bottom: 16px;">
+          <p style="font-size: 14px; margin-bottom: 12px;">Segue abaixo a relação dos documentos que estarão sendo enviados em anexo a este protocolo:</p>
+          <div style="background: #f3f4f6; padding: 12px; border: 1px solid #d1d5db; border-radius: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px;">
+            ${docsHTML}
+          </div>
+        </div>
+        
+        <div style="background: #fef3c7; border: 2px solid #eab308; padding: 16px; margin: 16px 0; border-radius: 4px; display: flex; align-items: center; justify-content: center; min-height: 64px;">
+          <p style="font-weight: bold; text-align: center; font-size: 16px; margin: 0;">DEVOLVER ESTE PROTOCOLO DEVIDAMENTE ASSINADO</p>
+        </div>
+        
+        <div style="border-top: 2px solid #9ca3af; padding-top: 16px; margin-bottom: 16px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; text-align: center; font-size: 14px;">
+            <div>
+              <p style="font-weight: 600; margin-bottom: 4px;">DATA DE ENVIO</p>
+              <p style="font-weight: bold; font-size: 18px;">${protocolo.dataFormatada}</p>
+            </div>
+            <div>
+              <p style="font-weight: 600; margin-bottom: 4px;">DATA RECEBIMENTO</p>
+              <p style="letter-spacing: 2px;">_____/_____/_____</p>
+            </div>
+            <div>
+              <p style="font-weight: 600; margin-bottom: 4px;">HORÁRIO</p>
+              <p style="letter-spacing: 2px;">_____:_____ hs</p>
+            </div>
+          </div>
+        </div>
+        
+        <div style="border-top: 2px solid #9ca3af; padding-top: 24px; margin-top: 24px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
+            <div style="text-align: center;">
+              <div style="height: 64px; margin-bottom: 8px;"></div>
+              <div style="border-top: 2px solid black; padding-top: 8px;">
+                <p style="font-size: 12px; font-weight: 500; margin: 0;">Assinatura do Emitente</p>
+              </div>
+            </div>
+            <div style="text-align: center;">
+              <div style="height: 64px; margin-bottom: 8px;"></div>
+              <div style="border-top: 2px solid black; padding-top: 8px;">
+                <p style="font-size: 12px; font-weight: 500; margin: 0;">Assinatura do Receptor</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  // Criar janela temporária para impressão
+  const janelaImpressao = window.open('', '_blank');
+  janelaImpressao.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Protocolos - Impressão em Lote</title>
+      <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+      <style>
+        * { font-family: 'Lato', sans-serif; }
+        body { margin: 0; padding: 20px; }
+        @media print {
+          * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+          @page { size: A4; margin: 10mm; }
+        }
+      </style>
+    </head>
+    <body>${conteudoHTML}</body>
+    </html>
+  `);
+  
+  janelaImpressao.document.close();
+  
+  setTimeout(() => {
+    janelaImpressao.print();
+    alert(`✅ ${protocolos.length} protocolo(s) enviado(s) para impressão!`);
+  }, 500);
+  
+  setModoSelecao(false);
+  setProtocolosSelecionados([]);
+};
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 p-6">
       <style>{`
@@ -230,61 +387,111 @@ const ProtocoloAmaraNZero = () => {
           </div>
         </div>
 
-        {/* Histórico */}
-        {mostrarHistorico && (
-          <div className="bg-white rounded-lg shadow-lg p-6 mb-6 no-print">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold">Histórico</h2>
-              <button
-                onClick={() => setMostrarHistorico(false)}
-                className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
-              >
-                Fechar
-              </button>
-            </div>
-            {historico.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">Nenhum protocolo ainda</p>
-            ) : (
-              <div className="space-y-3 max-h-96 overflow-y-auto">
-                {historico.map(p => (
-                  <div key={p.id} className="border rounded-lg p-4 hover:bg-gray-50">
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold text-lg">{p.nomeArquivo}</h3>
-                          <span className="text-xs font-mono bg-green-100 text-green-800 px-2 py-1 rounded">
-                            #{p.numeroProtocolo}
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-600">
-                          {p.setorEnvio} → {p.unidadeDestino || 'N/A'}
-                        </p>
-                        <p className="text-xs text-gray-500">{p.dataFormatada}</p>
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => carregarProtocolo(p)}
-                          className="px-3 py-1 text-white text-sm rounded hover:opacity-90"
-                          style={{backgroundColor: '#00953b'}}
-                        >
-                          Carregar
-                        </button>
-                        <button
-                          onClick={() => {
-                            if (confirm('Excluir?')) excluirDoHistorico(p.id);
-                          }}
-                          className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+      {/* Histórico */}
+{mostrarHistorico && (
+  <div className="bg-white rounded-lg shadow-lg p-6 mb-6 no-print">
+    <div className="flex justify-between items-center mb-4">
+      <h2 className="text-2xl font-bold">📋 Histórico</h2>
+      <div className="flex gap-2">
+        {!modoSelecao ? (
+          <>
+            <button
+              onClick={() => setModoSelecao(true)}
+              className="px-4 py-2 text-white rounded-md hover:opacity-90"
+              style={{backgroundColor: '#00953b'}}
+            >
+              📦 Impressão em Lote
+            </button>
+            <button
+              onClick={() => setMostrarHistorico(false)}
+              className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
+            >
+              Fechar
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={selecionarTodos}
+              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >
+              {protocolosSelecionados.length === historico.length ? 'Desmarcar Todos' : 'Selecionar Todos'}
+            </button>
+            <button
+              onClick={imprimirSelecionados}
+              className="px-4 py-2 text-white rounded-md hover:opacity-90"
+              style={{backgroundColor: '#00953b'}}
+            >
+              🖨️ Imprimir ({protocolosSelecionados.length})
+            </button>
+            <button
+              onClick={() => {
+                setModoSelecao(false);
+                setProtocolosSelecionados([]);
+              }}
+              className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
+            >
+              Cancelar
+            </button>
+          </>
         )}
+      </div>
+    </div>
+    {historico.length === 0 ? (
+      <p className="text-gray-500 text-center py-8">Nenhum protocolo ainda</p>
+    ) : (
+      <div className="space-y-3 max-h-96 overflow-y-auto">
+        {historico.map(p => (
+          <div key={p.id} className={`border rounded-lg p-4 transition ${
+            protocolosSelecionados.includes(p.id) ? 'bg-green-50 border-green-500' : 'hover:bg-gray-50'
+          }`}>
+            <div className="flex justify-between items-start">
+              {modoSelecao && (
+                <input
+                  type="checkbox"
+                  checked={protocolosSelecionados.includes(p.id)}
+                  onChange={() => toggleSelecao(p.id)}
+                  className="mt-1 mr-3 w-5 h-5 cursor-pointer"
+                />
+              )}
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="font-semibold text-lg">{p.nomeArquivo}</h3>
+                  <span className="text-xs font-mono bg-green-100 text-green-800 px-2 py-1 rounded">
+                    #{p.numeroProtocolo}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-600">
+                  {p.setorEnvio} → {p.unidadeDestino || 'N/A'}
+                </p>
+                <p className="text-xs text-gray-500">{p.dataFormatada}</p>
+              </div>
+              {!modoSelecao && (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => carregarProtocolo(p)}
+                    className="px-3 py-1 text-white text-sm rounded hover:opacity-90"
+                    style={{backgroundColor: '#00953b'}}
+                  >
+                    Carregar
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (confirm('Excluir?')) excluirDoHistorico(p.id);
+                    }}
+                    className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+)}
 
         {/* Formulário */}
         {!mostrarPreview ? (
