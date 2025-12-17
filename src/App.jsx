@@ -19,9 +19,7 @@ const ProtocoloAmaraNZero = () => {
 
   const [documentos, setDocumentos] = useState([
     { id: 1, descricao: '' },
-    { id: 2, descricao: '' },
-    { id: 3, descricao: '' },
-    { id: 4, descricao: '' }
+    { id: 2, descricao: '' }
   ]);
 
   const [mostrarPreview, setMostrarPreview] = useState(false);
@@ -35,43 +33,43 @@ const ProtocoloAmaraNZero = () => {
     gerarNumeroProtocolo();
   }, []);
 
-const gerarNumeroProtocolo = () => {
-  try {
-    const chaveAno = `ultimo_numero_protocolo_${anoAtual}`;
-    const ultimoNumero = localStorage.getItem(chaveAno);
-    let proximoNumero = 1;
-    
-    if (ultimoNumero) {
-      proximoNumero = parseInt(ultimoNumero) + 1;
+  const gerarNumeroProtocolo = () => {
+    try {
+      const chaveAno = `ultimo_numero_protocolo_${anoAtual}`;
+      const ultimoNumero = localStorage.getItem(chaveAno);
+      let proximoNumero = 1;
+      
+      if (ultimoNumero) {
+        proximoNumero = parseInt(ultimoNumero) + 1;
+      }
+      
+      const numeroFormatado = `${anoAtual}-${proximoNumero.toString().padStart(3, '0')}`;
+      setNumeroProtocolo(numeroFormatado);
+      
+      localStorage.setItem(chaveAno, proximoNumero.toString());
+    } catch (error) {
+      const numeroFallback = `${anoAtual}-${Date.now().toString().slice(-3)}`;
+      setNumeroProtocolo(numeroFallback);
     }
-    
-    const numeroFormatado = `${anoAtual}-${proximoNumero.toString().padStart(3, '0')}`;
-    setNumeroProtocolo(numeroFormatado);
-    
-    localStorage.setItem(chaveAno, proximoNumero.toString());
-  } catch (error) {
-    const numeroFallback = `${anoAtual}-${Date.now().toString().slice(-3)}`;
-    setNumeroProtocolo(numeroFallback);
-  }
-};
+  };
 
-const carregarHistorico = () => {
-  try {
-    const protocolos = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith('protocolo:')) {
-        const value = localStorage.getItem(key);
-        if (value) {
-          protocolos.push(JSON.parse(value));
+  const carregarHistorico = () => {
+    try {
+      const protocolos = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('protocolo:')) {
+          const value = localStorage.getItem(key);
+          if (value) {
+            protocolos.push(JSON.parse(value));
+          }
         }
       }
+      setHistorico(protocolos.sort((a, b) => new Date(b.dataGeracao) - new Date(a.dataGeracao)));
+    } catch (error) {
+      console.log('Sem histórico ainda');
     }
-    setHistorico(protocolos.sort((a, b) => new Date(b.dataGeracao) - new Date(a.dataGeracao)));
-  } catch (error) {
-    console.log('Sem histórico ainda');
-  }
-};
+  };
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -84,6 +82,10 @@ const carregarHistorico = () => {
   };
 
   const adicionarDoc = () => {
+    if (documentos.length >= 8) {
+      alert('⚠️ Máximo de 8 documentos por protocolo');
+      return;
+    }
     const novoId = Math.max(...documentos.map(d => d.id), 0) + 1;
     setDocumentos([...documentos, { id: novoId, descricao: '' }]);
   };
@@ -94,7 +96,7 @@ const carregarHistorico = () => {
     }
   };
 
-  const salvarNoHistorico = async () => {
+  const salvarNoHistorico = (mostrarAlerta = true) => {
     const protocolo = {
       id: Date.now(),
       numeroProtocolo: numeroProtocolo,
@@ -106,18 +108,33 @@ const carregarHistorico = () => {
     };
 
     try {
-      await window.storage.set(`protocolo:${protocolo.id}`, JSON.stringify(protocolo));
-      await carregarHistorico();
-      alert('Protocolo salvo no histórico!');
+      localStorage.setItem(`protocolo:${protocolo.id}`, JSON.stringify(protocolo));
+      carregarHistorico();
+      if (mostrarAlerta) {
+        alert('✅ Protocolo salvo no histórico!');
+      }
     } catch (error) {
       console.error('Erro ao salvar:', error);
+      if (mostrarAlerta) {
+        alert('❌ Erro ao salvar no histórico');
+      }
     }
   };
 
-  const excluirDoHistorico = async (id) => {
+  const salvarSemImprimir = () => {
+    if (!formData.nomeArquivo.trim()) {
+      alert('⚠️ Por favor, preencha o nome do arquivo!');
+      return;
+    }
+    
+    salvarNoHistorico(true);
+    gerarNumeroProtocolo();
+  };
+
+  const excluirDoHistorico = (id) => {
     try {
-      await window.storage.delete(`protocolo:${id}`);
-      await carregarHistorico();
+      localStorage.removeItem(`protocolo:${id}`);
+      carregarHistorico();
     } catch (error) {
       console.error('Erro ao excluir:', error);
     }
@@ -136,19 +153,18 @@ const carregarHistorico = () => {
     setMostrarHistorico(false);
   };
 
-  const imprimirProtocolo = async () => {
+  const imprimirProtocolo = () => {
     if (!formData.nomeArquivo.trim()) {
-      alert('❌ Por favor, preencha o nome do arquivo!');
+      alert('⚠️ Por favor, preencha o nome do arquivo!');
       return;
     }
     
-    await salvarNoHistorico();
+    salvarNoHistorico(false);
     setMostrarPreview(true);
     
-    // Aguardar um momento para o preview renderizar
     setTimeout(() => {
       window.print();
-      // Gerar novo número para o próximo protocolo
+      alert('✅ Protocolo salvo e enviado para impressão!');
       gerarNumeroProtocolo();
     }, 500);
   };
@@ -157,7 +173,6 @@ const carregarHistorico = () => {
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 p-6">
       <style>{`
         @media print {
-          /* Forçar impressão de cores */
           * {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
@@ -180,7 +195,6 @@ const carregarHistorico = () => {
             display: none !important;
           }
           
-          /* Configurar página A4 */
           @page {
             size: A4;
             margin: 10mm;
@@ -278,7 +292,7 @@ const carregarHistorico = () => {
             {/* Nome do Arquivo */}
             <div className="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4">
               <label className="block text-sm font-bold text-gray-800 mb-2">
-                Nome do Arquivo (obrigatório) *
+                📝 Nome do Arquivo (obrigatório) *
               </label>
               <input
                 type="text"
@@ -296,7 +310,7 @@ const carregarHistorico = () => {
             {/* Dados de Envio */}
             <div>
               <h2 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
-                Dados de Envio
+                📤 Dados de Envio
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -329,7 +343,7 @@ const carregarHistorico = () => {
             {/* Dados de Destino */}
             <div>
               <h2 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
-                Dados de Destino
+                📥 Dados de Destino
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -378,7 +392,7 @@ const carregarHistorico = () => {
             <div>
               <div className="flex justify-between items-center mb-4 border-b pb-2">
                 <h2 className="text-xl font-semibold text-gray-800">
-                  Documentos
+                  📄 Documentos
                 </h2>
                 <button
                   onClick={adicionarDoc}
@@ -415,102 +429,116 @@ const carregarHistorico = () => {
               </div>
             </div>
 
-{/* Botões */}
-<div className="space-y-3 pt-4">
-  <button
-    onClick={() => setMostrarPreview(true)}
-    className="w-full flex items-center justify-center gap-2 px-6 py-3 text-white rounded-lg hover:opacity-90 font-medium"
-    style={{backgroundColor: '#00953b'}}
-  >
-    <Eye className="w-5 h-5" />
-    Visualizar Protocolo
-  </button>
-  
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-    <button
-      onClick={salvarSemImprimir}
-      className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
-    >
-      <History className="w-5 h-5" />
-      Salvar no Histórico
-    </button>
-    
-    <button
-      onClick={imprimirProtocolo}
-      className="flex items-center justify-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
-    >
-      <Download className="w-5 h-5" />
-      Salvar como PDF
-    </button>
-  </div>
-</div>
+            {/* Botões */}
+            <div className="space-y-3 pt-4">
+              <button
+                onClick={() => setMostrarPreview(true)}
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 text-white rounded-lg hover:opacity-90 font-medium"
+                style={{backgroundColor: '#00953b'}}
+              >
+                <Eye className="w-5 h-5" />
+                Visualizar Protocolo
+              </button>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <button
+                  onClick={salvarSemImprimir}
+                  className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+                >
+                  <History className="w-5 h-5" />
+                  Salvar no Histórico
+                </button>
+                
+                <button
+                  onClick={imprimirProtocolo}
+                  className="flex items-center justify-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
+                >
+                  <Download className="w-5 h-5" />
+                  Salvar como PDF
+                </button>
+              </div>
+            </div>
+
+            {/* Instruções */}
+            <div className="mt-6 rounded-lg p-4 text-sm" style={{backgroundColor: '#e6f7ed', borderColor: '#00953b', borderWidth: '1px', color: '#00953b'}}>
+              <p className="font-bold mb-2">💡 Como usar:</p>
+              <ol className="list-decimal list-inside space-y-1">
+                <li><strong>"Visualizar Protocolo"</strong> - Ver como ficará antes de salvar</li>
+                <li><strong>"Salvar no Histórico"</strong> - Apenas salva localmente (sem imprimir)</li>
+                <li><strong>"Salvar como PDF"</strong> - Salva no histórico E já abre para impressão</li>
+              </ol>
+              <p className="mt-3 text-xs bg-yellow-50 border border-yellow-300 rounded p-2" style={{color: '#92400e'}}>
+                ⚠️ <strong>Importante:</strong> Os dados ficam salvos apenas neste navegador. Se limpar o cache ou usar outro computador, não verá o histórico.
+              </p>
+            </div>
+          </div>
         ) : (
           /* Preview */
           <div>
             <div id="protocolo-print" className="bg-white p-6">
               <div className="border-4 border-black p-6">
-                {/* Cabeçalho CORRIGIDO */}
-               <div className="flex items-center justify-between border-b-2 border-gray-400 pb-4 mb-4">
-  <img 
-  src={LOGO_AMARA}
-  alt="Amara NZero" 
-  className="h-28 object-contain -ml-6"
-/>
-  <div className="flex-1 text-center px-4">
-    <h2 className="text-xl font-bold text-gray-900">
-      PROTOCOLO DE ENVIO DE DOCUMENTOS
-    </h2>
-  </div>
-  <div className="flex flex-col items-center">
-    <div
-      style={{
-        width: '140px',
-        height: '32px',
-        border: '2px solid #1f2937',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '14px',
-        fontWeight: '700',
-        boxSizing: 'border-box'
-      }}
-    >
-      PROTOCOLO 2025
-    </div>
-    <div
-      style={{
-        fontSize: '12px',
-        fontWeight: '500',
-        color: '#374151',
-        marginTop: '4px'
-      }}
-    >
-      DESCRIÇÃO-MKT
-    </div>
-  </div>
-</div>
+                {/* Cabeçalho */}
+                <div className="flex items-center justify-between border-b-2 border-gray-400 pb-4 mb-4">
+                  <img 
+                    src={LOGO_AMARA}
+                    alt="Amara NZero" 
+                    className="h-28 object-contain -ml-6"
+                  />
+                  <div className="flex-1 text-center px-4">
+                    <h2 className="text-xl font-bold text-gray-900">
+                      PROTOCOLO DE ENVIO DE DOCUMENTOS
+                    </h2>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <div
+                      style={{
+                        width: '140px',
+                        height: '32px',
+                        border: '2px solid #1f2937',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '14px',
+                        fontWeight: '700',
+                        boxSizing: 'border-box'
+                      }}
+                    >
+                      PROTOCOLO 2025
+                    </div>
+                    <div
+                      style={{
+                        fontSize: '12px',
+                        fontWeight: '500',
+                        color: '#374151',
+                        marginTop: '4px'
+                      }}
+                    >
+                      DESCRIÇÃO-MKT
+                    </div>
+                  </div>
+                </div>
 
                 {/* Dados em Grid */}
                 <div className="grid grid-cols-2 gap-x-8 gap-y-3 mb-4 text-sm">
                   <div>
-                    <p className="text-gray-600 font-semibold">Setor de Envio:</p>
-                    <p className="font-bold">{formData.setorEnvio}</p>
+                    <p className="font-semibold text-gray-600" style={{fontSize: '14px'}}>Setor de Envio:</p>
+                    <p className="font-bold" style={{fontSize: '13px'}}>{formData.setorEnvio}</p>
                   </div>
                   <div>
-                    <p className="text-gray-600 font-semibold">Unidade de Envio:</p>
-                    <p className="font-bold">{formData.unidadeEnvio}</p>
+                    <p className="font-semibold text-gray-600" style={{fontSize: '14px'}}>Unidade de Envio:</p>
+                    <p className="font-bold" style={{fontSize: '13px'}}>{formData.unidadeEnvio}</p>
                   </div>
                   <div>
-                    <p className="text-gray-600 font-semibold">Unidade de Destino:</p>
-                    <p className="font-bold">{formData.unidadeDestino || '-'}</p>
+                    <p className="font-semibold text-gray-600" style={{fontSize: '14px'}}>Unidade de Destino:</p>
+                    <p className="font-bold" style={{fontSize: '13px'}}>{formData.unidadeDestino || '-'}</p>
                   </div>
                   <div>
-                    <p className="text-gray-600 font-semibold">Setor de Destino:</p>
-                    <p className="font-bold">{formData.setorDestino || '-'}</p>
+                    <p className="font-semibold text-gray-600" style={{fontSize: '14px'}}>Setor de Destino:</p>
+                    <p className="font-bold" style={{fontSize: '13px'}}>{formData.setorDestino || '-'}</p>
                   </div>
                   <div className="col-span-2">
-                    <p className="text-gray-600 font-semibold">Aos Cuidados de:</p>
-                    <p className="font-bold">{formData.aosCuidadosDe || '-'}</p>
+                    <p className="font-semibold text-gray-600" style={{fontSize: '14px'}}>Aos Cuidados de:</p>
+                    <p className="font-bold" style={{fontSize: '13px'}}>{formData.aosCuidadosDe || '-'}</p>
                   </div>
                 </div>
 
@@ -519,55 +547,53 @@ const carregarHistorico = () => {
                   <p className="text-sm mb-3">
                     Segue abaixo a relação dos documentos que estarão sendo enviados em anexo a este protocolo:
                   </p>
-                  <div className="bg-gray-100 p-3 border border-gray-300 rounded">
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                      {documentos.filter(d => d.descricao).map((doc, index) => (
-                        <div key={doc.id} className="flex gap-2 text-sm">
-                          <span className="font-bold" style={{color: '#00953b'}}>{index + 1}.</span>
-                          <span>{doc.descricao}</span>
-                        </div>
-                      ))}
-                    </div>
+                  <div className="bg-gray-100 p-3 border border-gray-300 rounded grid grid-cols-2 gap-x-4">
+                    {documentos.filter(d => d.descricao).map((doc, index) => (
+                      <div key={doc.id} className="flex gap-2 text-sm mb-2">
+                        <span className="font-bold" style={{color: '#00953b'}}>{index + 1}.</span>
+                        <span className="font-medium">{doc.descricao}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
                 {/* Aviso Amarelo */}
-                <div className="bg-yellow-100 border-2 border-yellow-500 p-3 my-4">
-                  <p className="font-bold text-center text-sm">
+                <div className="bg-yellow-100 border-2 border-yellow-500 p-4 rounded mt-4 flex items-center justify-center min-h-16">
+                  <p className="font-bold text-center text-base">
                     DEVOLVER ESTE PROTOCOLO DEVIDAMENTE ASSINADO
                   </p>
                 </div>
 
                 {/* Datas */}
-                <div className="border-t-2 border-gray-400 pt-4 mb-4">
-                  <div className="grid grid-cols-3 gap-4 text-center text-sm">
-                    <div>
-                      <p className="font-semibold mb-1">DATA DE ENVIO</p>
-                      <p className="font-bold">{hoje}</p>
+                <div className="border-t-2 border-gray-400 pt-4 mt-4">
+                  <div className="grid grid-cols-3 gap-4 text-sm">
+                    <div className="text-center">
+                      <p className="text-gray-700 font-semibold mb-1">DATA DE ENVIO</p>
+                      <p className="font-bold text-lg">{hoje}</p>
                     </div>
-                    <div>
-                      <p className="font-semibold mb-1">DATA RECEBIMENTO</p>
-                      <p>_____/_____/_____</p>
+                    <div className="text-center">
+                      <p className="text-gray-700 font-semibold mb-1">DATA RECEBIMENTO</p>
+                      <p className="text-gray-500 tracking-widest">_____/_____/_____</p>
                     </div>
-                    <div>
-                      <p className="font-semibold mb-1">HORÁRIO</p>
-                      <p>_____:_____ hs</p>
+                    <div className="text-center">
+                      <p className="text-gray-700 font-semibold mb-1">HORÁRIO</p>
+                      <p className="text-gray-500 tracking-widest">_____:_____ hs</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Assinaturas */}
-                <div className="border-t-2 border-gray-400 pt-6">
-                  <div className="grid grid-cols-2 gap-12">
+                <div className="border-t-2 border-gray-400 pt-6 mt-6">
+                  <div className="grid grid-cols-2 gap-8">
                     <div className="text-center">
-                      <div className="h-12 mb-2"></div>
-                      <div className="border-t-2 border-black pt-2">
+                      <div className="h-16"></div>
+                      <div className="border-t-2 border-gray-700 pt-2">
                         <p className="text-xs font-medium">Assinatura do Emitente</p>
                       </div>
                     </div>
                     <div className="text-center">
-                      <div className="h-12 mb-2"></div>
-                      <div className="border-t-2 border-black pt-2">
+                      <div className="h-16"></div>
+                      <div className="border-t-2 border-gray-700 pt-2">
                         <p className="text-xs font-medium">Assinatura do Receptor</p>
                       </div>
                     </div>
@@ -589,7 +615,7 @@ const carregarHistorico = () => {
                 className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
               >
                 <Download className="w-5 h-5" />
-                Gerar PDF
+                Salvar como PDF
               </button>
             </div>
           </div>
