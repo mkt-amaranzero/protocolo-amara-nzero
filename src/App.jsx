@@ -444,46 +444,45 @@ const ProtocoloAmaraNZero = () => {
             <div id="protocolo-print" className="bg-white p-6">
               <div className="border-4 border-black p-6">
                 {/* Cabeçalho CORRIGIDO */}
-                <div className="flex items-start justify-between border-b-2 border-gray-400 pb-4 mb-4">
-                  <img 
-                    src={LOGO_AMARA}
-                    alt="Amara NZero" 
-                    className="h-20 object-contain"
-                  />
-                  <div className="flex-1 text-center px-4">
-                    <h2 className="text-xl font-bold text-gray-900">
-                      PROTOCOLO DE ENVIO DE DOCUMENTOS
+               <div className="flex items-center justify-between border-b-2 border-gray-400 pb-4 mb-4">
+  <img 
+    src={LOGO_AMARA}
+    alt="Amara NZero" 
+    className="h-20 object-contain"
+  />
+  <div className="flex-1 text-center px-4">
+    <h2 className="text-xl font-bold text-gray-900">
+      PROTOCOLO DE ENVIO DE DOCUMENTOS
     </h2>
   </div>
- <div className="flex flex-col items-center">
-  <div
-    style={{
-      width: '140px',
-      height: '32px',
-      border: '2px solid #1f2937',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontSize: '14px',
-      fontWeight: '700',
-      boxSizing: 'border-box'
-    }}
-  >
-    PROTOCOLO 2025
-  </div>
-
-  <div
-    style={{
-      fontSize: '12px',
-      fontWeight: '500',
-      color: '#374151',
-      marginTop: '4px'
-    }}
-  >
-    DESCRIÇÃO-MKT
+  <div className="flex flex-col items-center">
+    <div
+      style={{
+        width: '140px',
+        height: '32px',
+        border: '2px solid #1f2937',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '14px',
+        fontWeight: '700',
+        boxSizing: 'border-box'
+      }}
+    >
+      PROTOCOLO 2025
+    </div>
+    <div
+      style={{
+        fontSize: '12px',
+        fontWeight: '500',
+        color: '#374151',
+        marginTop: '4px'
+      }}
+    >
+      DESCRIÇÃO-MKT
+    </div>
   </div>
 </div>
- </div>
 
                 {/* Dados em Grid */}
                 <div className="grid grid-cols-2 gap-x-8 gap-y-3 mb-4 text-sm">
