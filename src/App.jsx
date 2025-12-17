@@ -189,7 +189,7 @@ const selecionarTodos = () => {
 
 const imprimirSelecionados = () => {
   if (protocolosSelecionados.length === 0) {
-    alert('⚠️ Selecione pelo menos um protocolo!');
+    alert('Selecione pelo menos um protocolo!');
     return;
   }
 
@@ -319,7 +319,7 @@ const imprimirSelecionados = () => {
   
   setTimeout(() => {
     janelaImpressao.print();
-    alert(`✅ ${protocolos.length} protocolo(s) enviado(s) para impressão!`);
+    alert(`${protocolos.length} protocolo(s) enviado(s) para impressão!`);
   }, 500);
   
   setModoSelecao(false);
@@ -400,7 +400,7 @@ const imprimirSelecionados = () => {
               className="px-4 py-2 text-white rounded-md hover:opacity-90"
               style={{backgroundColor: '#00953b'}}
             >
-              📦 Impressão em Lote
+              Impressão em Lote
             </button>
             <button
               onClick={() => setMostrarHistorico(false)}
@@ -422,7 +422,7 @@ const imprimirSelecionados = () => {
               className="px-4 py-2 text-white rounded-md hover:opacity-90"
               style={{backgroundColor: '#00953b'}}
             >
-              🖨️ Imprimir ({protocolosSelecionados.length})
+              Imprimir ({protocolosSelecionados.length})
             </button>
             <button
               onClick={() => {
