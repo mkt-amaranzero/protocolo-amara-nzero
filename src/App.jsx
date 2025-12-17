@@ -83,7 +83,7 @@ const ProtocoloAmaraNZero = () => {
 
   const adicionarDoc = () => {
     if (documentos.length >= 8) {
-      alert('⚠️ Máximo de 8 documentos por protocolo');
+      alert('Máximo de 8 documentos por protocolo');
       return;
     }
     const novoId = Math.max(...documentos.map(d => d.id), 0) + 1;
@@ -111,19 +111,19 @@ const ProtocoloAmaraNZero = () => {
       localStorage.setItem(`protocolo:${protocolo.id}`, JSON.stringify(protocolo));
       carregarHistorico();
       if (mostrarAlerta) {
-        alert('✅ Protocolo salvo no histórico!');
+        alert('Protocolo salvo no histórico!');
       }
     } catch (error) {
       console.error('Erro ao salvar:', error);
       if (mostrarAlerta) {
-        alert('❌ Erro ao salvar no histórico');
+        alert('Erro ao salvar no histórico');
       }
     }
   };
 
   const salvarSemImprimir = () => {
     if (!formData.nomeArquivo.trim()) {
-      alert('⚠️ Por favor, preencha o nome do arquivo!');
+      alert('Por favor, preencha o nome do arquivo!');
       return;
     }
     
@@ -155,7 +155,7 @@ const ProtocoloAmaraNZero = () => {
 
   const imprimirProtocolo = () => {
     if (!formData.nomeArquivo.trim()) {
-      alert('⚠️ Por favor, preencha o nome do arquivo!');
+      alert('Por favor, preencha o nome do arquivo!');
       return;
     }
     
@@ -164,7 +164,7 @@ const ProtocoloAmaraNZero = () => {
     
     setTimeout(() => {
       window.print();
-      alert('✅ Protocolo salvo e enviado para impressão!');
+      alert('Protocolo salvo e enviado para impressão!');
       gerarNumeroProtocolo();
     }, 500);
   };
@@ -234,7 +234,7 @@ const ProtocoloAmaraNZero = () => {
         {mostrarHistorico && (
           <div className="bg-white rounded-lg shadow-lg p-6 mb-6 no-print">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold">📋 Histórico</h2>
+              <h2 className="text-2xl font-bold">Histórico</h2>
               <button
                 onClick={() => setMostrarHistorico(false)}
                 className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
@@ -292,7 +292,7 @@ const ProtocoloAmaraNZero = () => {
             {/* Nome do Arquivo */}
             <div className="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4">
               <label className="block text-sm font-bold text-gray-800 mb-2">
-                📝 Nome do Arquivo (obrigatório) *
+                Nome do Arquivo (obrigatório) *
               </label>
               <input
                 type="text"
@@ -310,7 +310,7 @@ const ProtocoloAmaraNZero = () => {
             {/* Dados de Envio */}
             <div>
               <h2 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
-                📤 Dados de Envio
+                Dados de Envio
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -343,7 +343,7 @@ const ProtocoloAmaraNZero = () => {
             {/* Dados de Destino */}
             <div>
               <h2 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
-                📥 Dados de Destino
+                Dados de Destino
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -392,7 +392,7 @@ const ProtocoloAmaraNZero = () => {
             <div>
               <div className="flex justify-between items-center mb-4 border-b pb-2">
                 <h2 className="text-xl font-semibold text-gray-800">
-                  📄 Documentos
+                  Documentos
                 </h2>
                 <button
                   onClick={adicionarDoc}
@@ -461,14 +461,14 @@ const ProtocoloAmaraNZero = () => {
 
             {/* Instruções */}
             <div className="mt-6 rounded-lg p-4 text-sm" style={{backgroundColor: '#e6f7ed', borderColor: '#00953b', borderWidth: '1px', color: '#00953b'}}>
-              <p className="font-bold mb-2">💡 Como usar:</p>
+              <p className="font-bold mb-2">Como usar:</p>
               <ol className="list-decimal list-inside space-y-1">
                 <li><strong>"Visualizar Protocolo"</strong> - Ver como ficará antes de salvar</li>
                 <li><strong>"Salvar no Histórico"</strong> - Apenas salva localmente (sem imprimir)</li>
                 <li><strong>"Salvar como PDF"</strong> - Salva no histórico E já abre para impressão</li>
               </ol>
               <p className="mt-3 text-xs bg-yellow-50 border border-yellow-300 rounded p-2" style={{color: '#92400e'}}>
-                ⚠️ <strong>Importante:</strong> Os dados ficam salvos apenas neste navegador. Se limpar o cache ou usar outro computador, não verá o histórico.
+                <strong>Importante:</strong> Os dados ficam salvos apenas neste navegador. Se limpar o cache ou usar outro computador, não verá o histórico.
               </p>
             </div>
           </div>
