@@ -35,47 +35,43 @@ const ProtocoloAmaraNZero = () => {
     gerarNumeroProtocolo();
   }, []);
 
-  const gerarNumeroProtocolo = async () => {
-    try {
-      // Buscar o último número usado PARA ESTE ANO
-      const chaveAno = `ultimo_numero_protocolo_${anoAtual}`;
-      const result = await window.storage.get(chaveAno);
-      let proximoNumero = 1;
-      
-      if (result && result.value) {
-        proximoNumero = parseInt(result.value) + 1;
-      }
-      
-      // Formatar: ANO-NÚMERO com 3 dígitos (ex: 2025-001)
-      const numeroFormatado = `${anoAtual}-${proximoNumero.toString().padStart(3, '0')}`;
-      setNumeroProtocolo(numeroFormatado);
-      
-      // Salvar o próximo número PARA ESTE ANO
-      await window.storage.set(chaveAno, proximoNumero.toString());
-    } catch (error) {
-      // Se der erro, usar timestamp como fallback
-      const numeroFallback = `${anoAtual}-${Date.now().toString().slice(-3)}`;
-      setNumeroProtocolo(numeroFallback);
+const gerarNumeroProtocolo = () => {
+  try {
+    const chaveAno = `ultimo_numero_protocolo_${anoAtual}`;
+    const ultimoNumero = localStorage.getItem(chaveAno);
+    let proximoNumero = 1;
+    
+    if (ultimoNumero) {
+      proximoNumero = parseInt(ultimoNumero) + 1;
     }
-  };
+    
+    const numeroFormatado = `${anoAtual}-${proximoNumero.toString().padStart(3, '0')}`;
+    setNumeroProtocolo(numeroFormatado);
+    
+    localStorage.setItem(chaveAno, proximoNumero.toString());
+  } catch (error) {
+    const numeroFallback = `${anoAtual}-${Date.now().toString().slice(-3)}`;
+    setNumeroProtocolo(numeroFallback);
+  }
+};
 
-  const carregarHistorico = async () => {
-    try {
-      const keys = await window.storage.list('protocolo:');
-      if (keys && keys.keys) {
-        const protocolos = [];
-        for (const key of keys.keys) {
-          const result = await window.storage.get(key);
-          if (result && result.value) {
-            protocolos.push(JSON.parse(result.value));
-          }
+const carregarHistorico = () => {
+  try {
+    const protocolos = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith('protocolo:')) {
+        const value = localStorage.getItem(key);
+        if (value) {
+          protocolos.push(JSON.parse(value));
         }
-        setHistorico(protocolos.sort((a, b) => new Date(b.dataGeracao) - new Date(a.dataGeracao)));
       }
-    } catch (error) {
-      console.log('Sem histórico ainda');
     }
-  };
+    setHistorico(protocolos.sort((a, b) => new Date(b.dataGeracao) - new Date(a.dataGeracao)));
+  } catch (error) {
+    console.log('Sem histórico ainda');
+  }
+};
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
