@@ -485,9 +485,9 @@ const ProtocoloAmaraNZero = () => {
               <FileText className="w-8 h-8" style={{color: '#00953b'}} />
               <div>
                 <h1 className="text-3xl font-bold text-gray-800">
-                  Automação de Protocolo
+                  Registro de Protocolo
                 </h1>
-                <p className="text-gray-600">Sistema Amara NZero</p>
+                <p className="text-gray-600">Amara NZero</p>
               </div>
             </div>
             <button
