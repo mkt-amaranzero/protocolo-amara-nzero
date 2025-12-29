@@ -487,7 +487,7 @@ const ProtocoloAmaraNZero = () => {
                 <h1 className="text-3xl font-bold text-gray-800">
                   Registro de Protocolo
                 </h1>
-                <p className="text-gray-600">Amara NZero</p>
+                <p className="text-gray-600">Sistema Amara NZero</p>
               </div>
             </div>
             <button
