@@ -301,8 +301,8 @@ const ProtocoloAmaraNZero = () => {
       `).join('');
 
       conteudoHTML += `
-        ${index > 0 ? '<div style="page-break-before: always;"></div>' : ''}
-        <div style="border: 4px solid black; padding: 24px; margin-bottom: 20px; font-family: 'Lato', sans-serif;">
+  ${index > 0 ? '<div style="page-break-before: always;"></div>' : ''}
+  <div style="border: 4px solid black; padding: 16px; margin-bottom: 20px; font-family: 'Lato', sans-serif;">
           <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #9ca3af; padding-bottom: 16px; margin-bottom: 16px;">
             <img src="${LOGO_AMARA}" style="height: 112px; object-fit: contain; margin-left: -24px;" />
             <div style="flex: 1; text-align: center; padding: 0 16px;">
