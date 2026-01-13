@@ -441,7 +441,7 @@ const ProtocoloAmaraNZero = () => {
   width: 100%;
   padding: 10mm;
 
-  transform: scale(0.9);
+  transform: scale(0.88);
   transform-origin: top center;
 }
 
