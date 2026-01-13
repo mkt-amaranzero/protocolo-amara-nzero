@@ -434,13 +434,17 @@ const ProtocoloAmaraNZero = () => {
           #protocolo-print, #protocolo-print * {
             visibility: visible;
           }
-          #protocolo-print {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            padding: 10mm;
-          }
+         #protocolo-print {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  padding: 10mm;
+
+  transform: scale(0.9);
+  transform-origin: top center;
+}
+
           .no-print {
             display: none !important;
           }
