@@ -310,7 +310,7 @@ const ProtocoloAmaraNZero = () => {
             </div>
             <div style="text-align: center;">
               <div style="width: 140px; height: 32px; border: 2px solid #1f2937; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700;">
-                PROTOCOLO 2025
+                PROTOCOLO 2026
               </div>
               <div style="font-size: 12px; font-weight: 500; color: #374151; margin-top: 4px;">DESCRIÇÃO-MKT</div>
             </div>
@@ -826,7 +826,7 @@ const ProtocoloAmaraNZero = () => {
                         boxSizing: 'border-box'
                       }}
                     >
-                      PROTOCOLO 2025
+                      PROTOCOLO 2026
                     </div>
                     <div
                       style={{
