@@ -435,14 +435,12 @@ body { transform: scale(0.62); transform-origin: top center; }
           #protocolo-print, #protocolo-print * {
             visibility: visible;
           }
-    #protocolo-print {
+   #protocolo-print {
   position: absolute;
-  left: 0;
+  left: 3%;
   top: 0;
-  width: 100%;
-  padding: 8mm 10mm;
-  transform: scale(0.62);
-  transform-origin: top center;
+  width: 94%;
+  padding: 5mm;
 }
 
           .no-print {
