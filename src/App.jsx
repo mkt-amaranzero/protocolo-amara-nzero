@@ -400,7 +400,7 @@ const ProtocoloAmaraNZero = () => {
           body { margin: 0; padding: 10mm; }
           @media print {
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            @page { size: A4; margin: 10mm; }
+            @page { size: A4; margin: 15mm; }
           }
         </style>
       </head>
@@ -434,21 +434,20 @@ const ProtocoloAmaraNZero = () => {
           #protocolo-print, #protocolo-print * {
             visibility: visible;
           }
-   #protocolo-print {
+#protocolo-print {
   position: absolute;
-  left: 3%;
+  left: 0;
   top: 0;
-  width: 94%;
-  padding: 5mm;
+  width: 100%;
+  padding: 15mm;
 }
-
           .no-print {
             display: none !important;
           }
           
           @page {
             size: A4;
-            margin: 10mm;
+            margin: 15mm;
           }
         }
 
