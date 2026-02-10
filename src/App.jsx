@@ -792,7 +792,7 @@ const ProtocoloAmaraNZero = () => {
               <ol className="list-decimal list-inside space-y-1">
                 <li><strong>"Visualizar Protocolo"</strong> - Ver como ficará antes de salvar</li>
                 <li><strong>"Salvar no Histórico"</strong> - Apenas salva localmente (sem imprimir)</li>
-                <li><strong>"Salvar como PDF"</strong> - Salva no histórico e permite a possibilidade de impressão em lote</li>
+                <li><strong>"Salvar como PDF"</strong> - Salva no histórico e permite impressão em lote</li>
               </ol>
               <p className="mt-3 text-xs bg-yellow-50 border border-yellow-300 rounded p-2" style={{color: '#92400e'}}>
                 <strong>Importante:</strong> Os dados ficam salvos apenas neste navegador. Se limpar o cache ou usar outro computador, não verá o histórico.
@@ -884,8 +884,8 @@ const ProtocoloAmaraNZero = () => {
                   </div>
                 </div>
 
-                {/* Aviso Amarelo */}
-                <div className="bg-yellow-100 border-2 border-yellow-500 p-4 rounded mt-4 flex items-center justify-center min-h-16">
+             {/* Aviso Cinza */}
+                <div className="bg-gray-300 border-2 border-black p-4 rounded mt-4 flex items-center justify-center min-h-16">
                   <p className="font-bold text-center text-base">
                     DEVOLVER ESTE PROTOCOLO DEVIDAMENTE ASSINADO
                   </p>
