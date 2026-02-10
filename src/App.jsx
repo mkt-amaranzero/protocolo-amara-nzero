@@ -397,10 +397,11 @@ const ProtocoloAmaraNZero = () => {
         <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
         <style>
           * { font-family: 'Lato', sans-serif; }
-          body { margin: 0; padding: 20px; }
+          body { margin: 0; padding: 10px; }
           @media print {
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             @page { size: A4; margin: 10mm; }
+body { transform: scale(0.62); transform-origin: top center; }
           }
         </style>
       </head>
@@ -434,14 +435,13 @@ const ProtocoloAmaraNZero = () => {
           #protocolo-print, #protocolo-print * {
             visibility: visible;
           }
-         #protocolo-print {
+    #protocolo-print {
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
-  padding: 10mm;
-
-  transform: scale(0.88);
+  padding: 8mm 10mm;
+  transform: scale(0.62);
   transform-origin: top center;
 }
 
